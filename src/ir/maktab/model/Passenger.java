@@ -31,6 +31,20 @@ public class Passenger {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "passenger")
     private List<Trip> trips;
 
-
-
+    @Override
+    public String toString() {
+        return "Passenger{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", dateOfBirth=" + dateOfBirth +
+                ", nationalId='" + nationalId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", balance=" + balance +
+                ", passengerStatus=" + passengerStatus +
+                ", location=" + location +
+                '}';
+    }
 }

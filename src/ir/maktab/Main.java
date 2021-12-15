@@ -1,16 +1,17 @@
 package ir.maktab;
 
-import ir.maktab.model.Driver;
-import ir.maktab.model.Location;
-import ir.maktab.model.Passenger;
-import ir.maktab.model.Vehicle;
+import ir.maktab.dto.DriverDto;
+import ir.maktab.model.*;
 import ir.maktab.model.enums.Color;
 import ir.maktab.model.enums.Gender;
+import ir.maktab.model.enums.PaymentType;
 import ir.maktab.model.enums.TypeOfVehicle;
 import ir.maktab.model.enums.status.DriverStatus;
 import ir.maktab.model.enums.status.PassengerStatus;
+import ir.maktab.model.enums.status.TripStatus;
 import ir.maktab.service.DriverService;
 import ir.maktab.service.PassengerService;
+import ir.maktab.service.TripService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -23,6 +24,7 @@ public class Main {
     final static Scanner scanner = new Scanner(System.in);
     final static DriverService driverService = new DriverService();
     final static PassengerService passengerService = new PassengerService();
+    final static TripService tripService = new TripService();
 
     public static void main(String[] args) throws SQLException, ParseException {
 
@@ -67,9 +69,16 @@ public class Main {
                     break;
                 case 5:
                     System.out.println("**** all drivers info ****");
-                    List<Driver> allDrivers = driverService.findAll();
-                    System.out.println(allDrivers);
+                    List<Driver> drivers = driverService.findAll();
+                    System.out.println(drivers);
                     break;
+                case 6:
+                    System.out.println("**** all passengers info ****");
+                    List<Passenger> passengers = passengerService.findAll();
+                    System.out.println(passengers);
+                    break;
+                case 7:
+                    exit = true;
 
             }
         } while (!exit);
@@ -190,8 +199,8 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    //TODO
-                    //driverActions(username);
+
+                    driverActions(username);
                     break;
                 case 2:
                     System.out.println("*** You are back to the main menu ***");
@@ -217,8 +226,156 @@ public class Main {
                     break;
             }
         } else {
-            //TODO
-            //passengerActions(user_name);
+            passengerActions(username);
         }
+    }
+
+    private static void passengerActions(String username) {
+        System.out.println("*** welcome ****");
+        System.out.println("1.continue \n2.Exit");
+        int choice = scanner.nextInt();
+        List<Passenger> passengers = passengerService.findByUsername(username);
+        Passenger passenger = passengers.get(0);
+        PassengerStatus passengerStatus = passenger.getPassengerStatus();
+        switch (choice) {
+            case 1: {
+                if (passengerStatus.equals(PassengerStatus.ABSENCE)) {
+                    System.out.println(passenger);
+                    System.out.println("select a choice :\n1)Cash Trip\n2)Online Trip\n3)Increase Inventory");
+                    int operations = scanner.nextInt();
+                    switch (operations) {
+                        case 1:
+                            PaymentType cash = PaymentType.CASH;
+                            System.out.println("You have requested cash travel");
+                            applyingForTrip(cash, passenger);
+                            break;
+
+                        case 2:
+                            int balanceForOnline = passenger.getBalance();
+                            PaymentType online = PaymentType.ONLINE;
+                            int tripPrice = applyingForTrip(online, passenger);
+                            if (balanceForOnline >= tripPrice) {
+                                System.out.println("You have requested online travel");
+                                applyingForTrip(online, passenger);
+                            } else {
+                                System.out.println("your inventory is not enough.\nselect cash trip or increase inventory.");
+                            }
+                            break;
+
+                        case 3:
+                            int balance = passenger.getBalance();
+                            System.out.println("your balance is : " + balance + "toman");
+                            System.out.println("enter count(toman):");
+                            int count = scanner.nextInt();
+                            int newBalance = (balance + count);
+                            passenger.setBalance(newBalance);
+                            passengerService.update(passenger);
+                            System.out.println("Inventory increased. New inventory : " + newBalance + "toman");
+                    }
+                } else {
+                    System.out.println("You are traveling.");
+                }
+                break;
+            }
+            case 2:
+                System.out.println("*** You are back to the main menu ***");
+                break;
+        }
+    }
+
+    public int applyingForTrip(PaymentType paymentType, Passenger passenger) {
+        Location originLocation = passenger.getLocation();
+        System.out.println("enter the destination Latitude:");
+        int destinationLatitude = scanner.nextInt();
+        System.out.println("enter the destination longitude:");
+        int destinationLongitude = scanner.nextInt();
+        Location destinationLocation = new Location();
+        destinationLocation.setLatitude(destinationLatitude);
+        destinationLocation.setLongitude(destinationLongitude);
+        //TODO
+        //locationDao.save(destinationLocation);
+
+        List<DriverDto> driversDto = driverService.driversDistanceToOrigin(originLocation);
+        String closestDriverUsername = driverService.findClosestDriver(driversDto);
+        List<Driver> drivers = driverService.findByUsername(closestDriverUsername);
+        Driver driver = drivers.get(0);
+        int tripsPrice = tripService.calculateThePrice(originLocation, destinationLocation);
+        TripStatus tripStatus = TripStatus.PROCESSING;
+        passenger.setPassengerStatus(PassengerStatus.TARVELING);
+        passengerService.update(passenger);
+        driver.setDriverStatus(DriverStatus.TARVELING);
+        driverService.update(driver);
+
+        Trip trip = new Trip();
+        trip.setDriver(driver);
+        trip.setPassenger(passenger);
+        trip.setDestinationLocation(destinationLocation);
+        trip.setPrice(tripsPrice);
+        trip.setPaymentType(paymentType);
+        trip.setTripStatus(tripStatus);
+
+        tripService.save(trip);
+        return tripsPrice;
+    }
+
+    private static void driverActions(String username) {
+        List<Driver> drivers = driverService.findByUsername(username);
+        Driver driver = drivers.get(0);
+        if (driver.getDriverStatus().equals(DriverStatus.WAITING)) {
+            System.out.println("You are waiting for the trip");
+            System.out.println("1)back to main menu");
+            scanner.nextInt();
+            return;
+        } else if (driver.getDriverStatus().equals(DriverStatus.TARVELING)) {
+            Trip trip = tripService.findTripByDrive(driver);
+            PaymentType paymentType = trip.getPaymentType();
+            System.out.println("paymentType:" + paymentType);
+            if (paymentType.equals(PaymentType.CASH)) {
+                System.out.println("1)Confirmation of receipt of funds\n2)exit");
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.println("Funds received");
+                        finishTrip(trip);
+                        Location destinationLocation = trip.getDestinationLocation();
+                        driver.setLocation(destinationLocation);
+                        driverService.update(driver);
+                        break;
+                    case 2:
+                        break;
+                }
+
+            } else if (paymentType.equals(PaymentType.ONLINE)) {
+                System.out.println("1)finish\n2)exit");
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.println("The trip ended.");
+                        finishTrip(trip);
+                        Location destinationLocation = trip.getDestinationLocation();
+                        driver.setLocation(destinationLocation);
+                        driverService.update(driver);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        }
+    }
+
+    public void finishTrip(Trip trip) {
+        PassengerStatus passengerStatus = PassengerStatus.ABSENCE;
+        Passenger passenger = trip.getPassenger();
+        passenger.setPassengerStatus(passengerStatus);
+        passengerService.update(passenger);
+
+        DriverStatus driverStatus = DriverStatus.WAITING;
+        Driver driver = trip.getDriver();
+        driver.setDriverStatus(driverStatus);
+        driverService.update(driver);
+
+        TripStatus newTripStatus = TripStatus.FINISHED;
+        trip.setTripStatus(newTripStatus);
+        tripService.update(trip);
     }
 }

@@ -1,10 +1,16 @@
 package ir.maktab.dao;
 
+import ir.maktab.dto.DriverDto;
 import ir.maktab.model.Driver;
+import ir.maktab.model.Location;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DriverDao extends BaseDao {
@@ -36,5 +42,13 @@ public class DriverDao extends BaseDao {
         transaction.commit();
         session.close();
         return resultList;
+    }
+
+    public void update(Driver driver) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(driver);
+        transaction.commit();
+        session.close();
     }
 }

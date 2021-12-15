@@ -28,4 +28,22 @@ public class PassengerDao extends BaseDao {
         session.close();
         return resultList;
     }
+
+    public List<Passenger> findAll() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query<Passenger> query = session.createQuery("FROM Passenger ");
+        List<Passenger> resultList = query.getResultList();
+        transaction.commit();
+        session.close();
+        return resultList;
+    }
+
+    public void update(Passenger passenger) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(passenger);
+        transaction.commit();
+        session.close();
+    }
 }

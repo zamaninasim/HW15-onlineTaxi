@@ -15,4 +15,12 @@ public class PassengerService {
     public List<Passenger> findByUsername(String username) {
         return passengerDao.findByUsername(username);
     }
+
+    public List<Passenger> findAll() {
+        return passengerDao.findAll();
+    }
+
+    public void update(Passenger passenger){
+        passengerDao.update(passenger);
+    }
 }
