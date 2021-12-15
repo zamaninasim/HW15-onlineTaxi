@@ -3,6 +3,9 @@ package ir.maktab.dao;
 import ir.maktab.model.Driver;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class DriverDao extends BaseDao {
 
@@ -12,5 +15,16 @@ public class DriverDao extends BaseDao {
         session.persist(driver);
         transaction.commit();
         session.close();
+    }
+
+    public List<Driver> findByUsername(String username) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query<Driver> query = session.createQuery("FROM Driver d WHERE d.userName=:usernameValue");
+        query.setParameter("usernameValue", username);
+        List<Driver> resultList = query.getResultList();
+        transaction.commit();
+        session.close();
+        return resultList;
     }
 }

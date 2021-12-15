@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -28,8 +29,14 @@ public class Main {
         boolean exit = false;
         do {
             System.out.println("********* Choose an option *********");
-            System.out.println("1.Add a group of drivers \n2.Add a group of passengers \n3.Driver signup or login " +
-                    "\n4.Passenger signup or login \n5.Show a list of drivers \n6.Show a list of passengers \n7.exit");
+            System.out.println("""
+                    1.Add a group of drivers\s
+                    2.Add a group of passengers\s
+                    3.Driver signup or login\s
+                    4.Passenger signup or login\s
+                    5.Show a list of drivers\s
+                    6.Show a list of passengers\s
+                    7.exit""");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
@@ -46,6 +53,13 @@ public class Main {
                         addPassenger();
                     }
                     break;
+                case 3:
+                    System.out.println("Username:");
+                    String user_name_d = scanner.next();
+                    signUpDriver(user_name_d);
+
+                    break;
+
             }
         } while (!exit);
 
@@ -142,5 +156,36 @@ public class Main {
         passenger.setBalance(balance);
         passenger.setLocation(passengerLocation);
         passengerService.save(passenger);
+    }
+
+    public static void signUpDriver(String username) throws ParseException {
+        List<Driver> drivers = driverService.findByUsername(username);
+        int size = drivers.size();
+        if (size==0) {
+            System.out.println("*** You are not registered ***");
+            System.out.println("1.Register \n2.Exit");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    addDriver();
+                    break;
+                case 2:
+                    System.out.println("*** You are back to the main menu ***");
+                    break;
+            }
+        } else {
+            System.out.println("*** welcome ****");
+            System.out.println("1.continue \n2.Exit");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    //TODO
+                    //driverActions(username);
+                    break;
+                case 2:
+                    System.out.println("*** You are back to the main menu ***");
+                    break;
+            }
+        }
     }
 }
