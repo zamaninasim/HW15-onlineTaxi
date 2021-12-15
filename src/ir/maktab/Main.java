@@ -363,7 +363,7 @@ public class Main {
         }
     }
 
-    public void finishTrip(Trip trip) {
+    public static void finishTrip(Trip trip) {
         PassengerStatus passengerStatus = PassengerStatus.ABSENCE;
         Passenger passenger = trip.getPassenger();
         passenger.setPassengerStatus(passengerStatus);
