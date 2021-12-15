@@ -28,7 +28,7 @@ public class Passenger {
     private PassengerStatus passengerStatus;
     @ManyToOne(cascade = CascadeType.ALL)
     private Location location;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "passenger")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
     private List<Trip> trips;
 
     @Override

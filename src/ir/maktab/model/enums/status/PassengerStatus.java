@@ -1,4 +1,5 @@
 package ir.maktab.model.enums.status;
+
 public enum PassengerStatus {
     ABSENCE("A"),
     WAITING("W"),

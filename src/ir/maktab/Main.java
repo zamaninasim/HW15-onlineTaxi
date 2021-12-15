@@ -10,6 +10,7 @@ import ir.maktab.model.enums.status.DriverStatus;
 import ir.maktab.model.enums.status.PassengerStatus;
 import ir.maktab.model.enums.status.TripStatus;
 import ir.maktab.service.DriverService;
+import ir.maktab.service.LocationService;
 import ir.maktab.service.PassengerService;
 import ir.maktab.service.TripService;
 
@@ -21,13 +22,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
     final static Scanner scanner = new Scanner(System.in);
     final static DriverService driverService = new DriverService();
     final static PassengerService passengerService = new PassengerService();
     final static TripService tripService = new TripService();
+    final static LocationService locationService = new LocationService();
 
     public static void main(String[] args) throws SQLException, ParseException {
-
         boolean exit = false;
         do {
             System.out.println("********* Choose an option *********");
@@ -59,9 +61,7 @@ public class Main {
                     System.out.println("Username:");
                     String user_name_d = scanner.next();
                     signUpDriver(user_name_d);
-
                     break;
-
                 case 4:
                     System.out.println("Username:");
                     String user_name_p = scanner.next();
@@ -79,10 +79,8 @@ public class Main {
                     break;
                 case 7:
                     exit = true;
-
             }
         } while (!exit);
-
     }
 
     public static void addDriver() throws ParseException {
@@ -292,8 +290,7 @@ public class Main {
         Location destinationLocation = new Location();
         destinationLocation.setLatitude(destinationLatitude);
         destinationLocation.setLongitude(destinationLongitude);
-        //TODO
-        //locationDao.save(destinationLocation);
+        locationService.save(destinationLocation);
 
         List<DriverDto> driversDto = driverService.driversDistanceToOrigin(originLocation);
         String closestDriverUsername = driverService.findClosestDriver(driversDto);

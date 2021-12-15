@@ -1,6 +1,5 @@
 package ir.maktab.dao;
 
-import ir.maktab.model.Driver;
 import ir.maktab.model.Passenger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

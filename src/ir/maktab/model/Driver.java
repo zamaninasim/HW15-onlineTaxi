@@ -5,14 +5,14 @@ import ir.maktab.model.enums.status.DriverStatus;
 import lombok.Data;
 
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity
 public class Driver {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String fullName;
     private String phoneNumber;
@@ -29,7 +29,7 @@ public class Driver {
     private Vehicle vehicle;
     @ManyToOne(cascade = CascadeType.ALL)
     private Location location;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "driver")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "driver")
     private List<Trip> trips;
 
     @Override

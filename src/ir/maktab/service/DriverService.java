@@ -51,7 +51,7 @@ public class DriverService {
         return null;
     }
 
-    public void update(Driver driver){
+    public void update(Driver driver) {
         driverDao.update(driver);
     }
 

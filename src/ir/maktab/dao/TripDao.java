@@ -1,16 +1,11 @@
 package ir.maktab.dao;
 
 import ir.maktab.model.Driver;
-import ir.maktab.model.Passenger;
 import ir.maktab.model.Trip;
-import ir.maktab.model.enums.PaymentType;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class TripDao extends BaseDao {

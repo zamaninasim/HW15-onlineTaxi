@@ -20,7 +20,7 @@ public class PassengerService {
         return passengerDao.findAll();
     }
 
-    public void update(Passenger passenger){
+    public void update(Passenger passenger) {
         passengerDao.update(passenger);
     }
 }
