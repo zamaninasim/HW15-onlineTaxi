@@ -197,7 +197,6 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-
                     driverActions(username);
                     break;
                 case 2:
@@ -257,6 +256,9 @@ public class Main {
                                 applyingForTrip(online, passenger);
                             } else {
                                 System.out.println("your inventory is not enough.\nselect cash trip or increase inventory.");
+                                PassengerStatus status = PassengerStatus.ABSENCE;
+                                passenger.setPassengerStatus(status);
+                                passengerService.update(passenger);
                             }
                             break;
 
@@ -324,6 +326,7 @@ public class Main {
             scanner.nextInt();
             return;
         } else if (driver.getDriverStatus().equals(DriverStatus.TARVELING)) {
+            System.out.println("You have a trip");
             Trip trip = tripService.findTripByDrive(driver);
             PaymentType paymentType = trip.getPaymentType();
             System.out.println("paymentType:" + paymentType);
@@ -334,9 +337,6 @@ public class Main {
                     case 1:
                         System.out.println("Funds received");
                         finishTrip(trip);
-                        Location destinationLocation = trip.getDestinationLocation();
-                        driver.setLocation(destinationLocation);
-                        driverService.update(driver);
                         break;
                     case 2:
                         break;
@@ -369,6 +369,8 @@ public class Main {
         DriverStatus driverStatus = DriverStatus.WAITING;
         Driver driver = trip.getDriver();
         driver.setDriverStatus(driverStatus);
+        Location destinationLocation = trip.getDestinationLocation();
+        driver.setLocation(destinationLocation);
         driverService.update(driver);
 
         TripStatus newTripStatus = TripStatus.FINISHED;

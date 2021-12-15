@@ -12,7 +12,7 @@ public class TripDao extends BaseDao {
     public void save(Trip trip) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(trip);
+        session.save(trip);
         transaction.commit();
         session.close();
     }
