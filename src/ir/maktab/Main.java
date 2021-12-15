@@ -60,6 +60,16 @@ public class Main {
 
                     break;
 
+                case 4:
+                    System.out.println("Username:");
+                    String user_name_p = scanner.next();
+                    signUpPassengers(user_name_p);
+                    break;
+                /*case 5:
+                    System.out.println("**** all drivers info ****");
+                    application.driverDao.showAllDrivers();
+                    break;*/
+
             }
         } while (!exit);
 
@@ -161,7 +171,7 @@ public class Main {
     public static void signUpDriver(String username) throws ParseException {
         List<Driver> drivers = driverService.findByUsername(username);
         int size = drivers.size();
-        if (size==0) {
+        if (size == 0) {
             System.out.println("*** You are not registered ***");
             System.out.println("1.Register \n2.Exit");
             int choice = scanner.nextInt();
@@ -186,6 +196,28 @@ public class Main {
                     System.out.println("*** You are back to the main menu ***");
                     break;
             }
+        }
+    }
+
+    public static void signUpPassengers(String username) throws ParseException {
+        List<Passenger> passengers = passengerService.findByUsername(username);
+        int size = passengers.size();
+        if (size == 0) {
+            System.out.println("*** You are not registered ***");
+            System.out.println("1.Register \n2.Exit");
+            Scanner input = new Scanner(System.in);
+            int choice = input.nextInt();
+            switch (choice) {
+                case 1:
+                    addPassenger();
+                    break;
+                case 2:
+                    System.out.println("*** You are back to the main menu ***");
+                    break;
+            }
+        } else {
+            //TODO
+            //passengerActions(user_name);
         }
     }
 }
