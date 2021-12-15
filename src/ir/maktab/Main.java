@@ -283,7 +283,7 @@ public class Main {
         }
     }
 
-    public int applyingForTrip(PaymentType paymentType, Passenger passenger) {
+    public static int applyingForTrip(PaymentType paymentType, Passenger passenger) {
         Location originLocation = passenger.getLocation();
         System.out.println("enter the destination Latitude:");
         int destinationLatitude = scanner.nextInt();
