@@ -32,6 +32,19 @@ public class Driver {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "driver")
     private List<Trip> trips;
 
-
-
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", dateOfBirth=" + dateOfBirth +
+                ", nationalId='" + nationalId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", driverStatus=" + driverStatus +
+                ", location=" + location +
+                '}';
+    }
 }

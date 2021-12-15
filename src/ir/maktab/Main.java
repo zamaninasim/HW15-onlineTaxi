@@ -65,10 +65,11 @@ public class Main {
                     String user_name_p = scanner.next();
                     signUpPassengers(user_name_p);
                     break;
-                /*case 5:
+                case 5:
                     System.out.println("**** all drivers info ****");
-                    application.driverDao.showAllDrivers();
-                    break;*/
+                    List<Driver> allDrivers = driverService.findAll();
+                    System.out.println(allDrivers);
+                    break;
 
             }
         } while (!exit);

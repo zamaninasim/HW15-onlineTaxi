@@ -27,4 +27,14 @@ public class DriverDao extends BaseDao {
         session.close();
         return resultList;
     }
+
+    public List<Driver> findAll() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query<Driver> query = session.createQuery("FROM Driver");
+        List<Driver> resultList = query.getResultList();
+        transaction.commit();
+        session.close();
+        return resultList;
+    }
 }

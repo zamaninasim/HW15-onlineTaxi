@@ -15,4 +15,8 @@ public class DriverService {
     public List<Driver> findByUsername(String username) {
         return driverDao.findByUsername(username);
     }
+
+    public List<Driver> findAll() {
+        return driverDao.findAll();
+    }
 }
