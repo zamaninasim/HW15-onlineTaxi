@@ -38,10 +38,11 @@ public class DriverService {
 
     public String findClosestDriver(List<DriverDto> driverDto) {
         String closestDriverUsername = " ";
-        Double min = 100.0;
+        Double min ;
         for (DriverDto d : driverDto) {
             min = d.getDistance();
             closestDriverUsername = d.getUsername();
+            //TODO
             if (d.getDistance() < min) {
                 min = d.getDistance();
                 closestDriverUsername = d.getUsername();

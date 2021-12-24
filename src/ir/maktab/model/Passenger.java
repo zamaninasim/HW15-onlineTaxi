@@ -3,6 +3,7 @@ package ir.maktab.model;
 import ir.maktab.model.enums.Gender;
 import ir.maktab.model.enums.status.PassengerStatus;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,41 +11,20 @@ import java.util.List;
 
 @Entity
 @Data
-public class Passenger {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String fullName;
-    private String phoneNumber;
-    private String email;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-    private String nationalId;
-    private String userName;
+@ToString(callSuper = true)
+public class Passenger extends User {
     private int balance;
     @Enumerated(EnumType.STRING)
     private PassengerStatus passengerStatus;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Location location;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
     private List<Trip> trips;
 
     @Override
     public String toString() {
+        super.toString();
         return "Passenger{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", gender=" + gender +
-                ", dateOfBirth=" + dateOfBirth +
-                ", nationalId='" + nationalId + '\'' +
-                ", userName='" + userName + '\'' +
-                ", balance=" + balance +
+                "balance=" + balance +
                 ", passengerStatus=" + passengerStatus +
-                ", location=" + location +
                 '}';
     }
 }
